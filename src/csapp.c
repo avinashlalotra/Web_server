@@ -1,6 +1,7 @@
 #include "../include/csapp.h"
 #include <string.h> // For memcpy
-
+#include <stdio.h>
+#include <time.h>
 ssize_t rio_readn(int fd, void *usrbuf, size_t n) {
     size_t nleft = n;
     ssize_t nread;
@@ -105,4 +106,33 @@ ssize_t rio_readnb(rio_t *rp, void *usrbuf, size_t n) {
         bufp += nread;
     }
     return (n - nleft); // Return >= 0
+}
+
+
+void metadata(const char *filename) {
+    struct stat Stat;
+
+    // Retrieve file status
+    if (stat(filename, &Stat) == -1) {
+        perror("stat");
+        exit(EXIT_FAILURE);
+    }
+
+    // Print file metadata
+    printf("File Metadata for: %s\n", filename);
+    printf("===============================\n");
+    printf("Device ID             : %lu\n", (unsigned long) Stat.st_dev);
+    printf("Inode Number          : %lu\n", (unsigned long) Stat.st_ino);
+    printf("File Mode             : %o\n", Stat.st_mode & (S_IFMT | S_IRWXU | S_IRWXG | S_IRWXO));
+    printf("Number of Hard Links  : %lu\n", (unsigned long) Stat.st_nlink);
+    printf("Owner UID             : %u\n", Stat.st_uid);
+    printf("Owner GID             : %u\n", Stat.st_gid);
+    printf("Device Type           : %lu\n", (unsigned long) Stat.st_rdev);
+    printf("Size                  : %lld bytes\n", (long long) Stat.st_size);
+    printf("Block Size            : %lu bytes\n", (unsigned long) Stat.st_blksize);
+    printf("Blocks Allocated      : %llu\n", (unsigned long long) Stat.st_blocks);
+    printf("Last Access Time      : %s", ctime(&Stat.st_atime));
+    printf("Last Modification Time: %s", ctime(&Stat.st_mtime));
+    printf("Last Status Change Time: %s", ctime(&Stat.st_ctime));
+    printf("===============================\n");
 }
