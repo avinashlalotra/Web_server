@@ -25,7 +25,7 @@ src/csapp.o: src/csapp.c
 
 # Clean up build artifacts
 clean:
-	rm -f *.o $(OUTPUT)
+	rm -f *.o $(OUTPUT) src/*.o
 
 # Declare phony targets
 .PHONY: all clean
